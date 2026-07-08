@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "MediMarket — Medical Marketplace"
+version = "1.0.0"
+id = "artifacts/medical-marketplace"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19507
+
+[services.development]
+run = "pnpm --filter @workspace/medical-marketplace run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/medical-marketplace", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/medical-marketplace/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19507"
+BASE_PATH = "/"

@@ -1,0 +1,3 @@
+- [JWT auth setup](jwt-auth.md) — SESSION_SECRET used for JWT signing; setAuthTokenGetter in main.tsx wires token to all API calls
+- [Drizzle numeric type](drizzle-numerics.md) — numeric columns return strings from PG; always parseFloat() before using
+- [Health route double-prefix](health-route.md) — health.ts must use "/" not "/healthz" since it's mounted at "/healthz" in router
