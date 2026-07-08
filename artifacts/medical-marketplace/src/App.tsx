@@ -8,6 +8,7 @@ import { LandingPage } from '@/pages/LandingPage';
 import { RegisterSelectorPage } from '@/pages/RegisterSelectorPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { AdminLoginPage } from '@/pages/AdminLoginPage';
 import { CustomerDashboardPage } from '@/pages/CustomerDashboard';
 import { StoreOwnerDashboardPage } from '@/pages/StoreOwnerDashboard';
 import { DeliveryDashboardPage } from '@/pages/DeliveryDashboard';
@@ -21,7 +22,9 @@ function Router() {
     <Switch>
       <Route path="/" component={LandingPage} />
       <Route path="/login" component={LoginPage} />
-      
+      <Route path="/admin/login" component={AdminLoginPage} />
+
+      {/* Public registration — admin registration is intentionally absent */}
       <Route path="/register" component={RegisterSelectorPage} />
       <Route path="/register/customer">
         <RegisterPage role="customer" />
@@ -32,10 +35,8 @@ function Router() {
       <Route path="/register/delivery-partner">
         <RegisterPage role="delivery_partner" />
       </Route>
-      <Route path="/register/admin">
-        <RegisterPage role="admin" />
-      </Route>
 
+      {/* Role-protected dashboards */}
       <Route path="/dashboard/customer">
         <ProtectedRoute role="customer">
           <CustomerDashboardPage />
@@ -51,6 +52,8 @@ function Router() {
           <DeliveryDashboardPage />
         </ProtectedRoute>
       </Route>
+
+      {/* Admin dashboard — unauthenticated users go to /admin/login; wrong-role users go to home */}
       <Route path="/dashboard/admin">
         <ProtectedRoute role="admin">
           <AdminDashboardPage />

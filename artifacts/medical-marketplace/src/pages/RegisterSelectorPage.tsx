@@ -1,6 +1,6 @@
 import React from "react"
-import { useLocation, Link } from "wouter"
-import { Pill, UserCircle, Store, Truck, Shield } from "lucide-react"
+import { Link } from "wouter"
+import { Pill, UserCircle, Store, Truck } from "lucide-react"
 
 export function RegisterSelectorPage() {
   return (
@@ -14,7 +14,7 @@ export function RegisterSelectorPage() {
           <p className="text-slate-600 dark:text-slate-400">Select how you want to use MediMarket.</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           <SelectionCard
             href="/register/customer"
             title="Customer"
@@ -36,15 +36,8 @@ export function RegisterSelectorPage() {
             icon={<Truck className="h-10 w-10" />}
             colorClass="bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-600 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 dark:border-amber-800 dark:text-amber-400"
           />
-          <SelectionCard
-            href="/register/admin"
-            title="Administrator"
-            description="Manage platform operations and verifications"
-            icon={<Shield className="h-10 w-10" />}
-            colorClass="bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-600 dark:bg-purple-900/20 dark:hover:bg-purple-900/40 dark:border-purple-800 dark:text-purple-400"
-          />
         </div>
-        
+
         <div className="text-center mt-10 text-slate-600 dark:text-slate-400 text-sm">
           Already have an account? <Link href="/login" className="text-primary hover:underline font-medium">Log in</Link>
         </div>

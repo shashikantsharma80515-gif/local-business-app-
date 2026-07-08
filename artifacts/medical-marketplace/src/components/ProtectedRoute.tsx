@@ -19,11 +19,23 @@ export function ProtectedRoute({ children, role }: ProtectedRouteProps) {
     );
   }
 
+  // Not authenticated
   if (!isAuthenticated) {
-    return <Redirect to="/login" />;
+    // Admin routes send unauthenticated users to the dedicated admin portal
+    return <Redirect to={role === 'admin' ? '/admin/login' : '/login'} />;
   }
 
+  // Authenticated but wrong role
   if (role && user && user.role !== role) {
+    // Non-admin trying to reach admin dashboard → home page (not their dashboard)
+    if (role === 'admin') {
+      return <Redirect to="/" />;
+    }
+    // Admin trying to reach a non-admin dashboard → their own dashboard
+    if (user.role === 'admin') {
+      return <Redirect to="/dashboard/admin" />;
+    }
+    // Wrong non-admin role → their correct dashboard
     return <Redirect to={getDashboardRoute(user.role)} />;
   }
 
