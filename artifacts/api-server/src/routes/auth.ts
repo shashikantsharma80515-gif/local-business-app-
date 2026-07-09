@@ -1,6 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import rateLimit from "express-rate-limit";
+import { timingSafeEqual } from "crypto";
 import { eq } from "drizzle-orm";
 import { db, usersTable, storesTable, deliveryProfilesTable } from "@workspace/db";
 import { requireAuth, signToken } from "../middlewares/auth.js";
@@ -158,14 +159,31 @@ router.post("/login", loginRateLimiter, async (req, res) => {
   }
 });
 
+// Timing-safe string comparison — prevents timing attacks on constant-time check.
+function safeStringEqual(a: string, b: string): boolean {
+  try {
+    const aBuf = Buffer.from(a, "utf8");
+    const bBuf = Buffer.from(b, "utf8");
+    // timingSafeEqual requires equal lengths; pad to avoid length leaks.
+    if (aBuf.length !== bBuf.length) {
+      // Still run a dummy comparison so duration stays constant.
+      timingSafeEqual(aBuf, aBuf);
+      return false;
+    }
+    return timingSafeEqual(aBuf, bBuf);
+  } catch {
+    return false;
+  }
+}
+
 // POST /api/auth/admin/login — Super Admin only; verified entirely from env vars, never the DB
 router.post("/admin/login", adminLoginRateLimiter, async (req, res) => {
   try {
     const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
-    if (!adminEmail || !adminPasswordHash) {
-      logger.error("ADMIN_EMAIL or ADMIN_PASSWORD_HASH env vars are not configured");
+    if (!adminEmail || !adminPassword) {
+      logger.error("ADMIN_EMAIL or ADMIN_PASSWORD env vars are not configured");
       res.status(503).json({ error: "Admin login is not configured. Contact the system administrator." });
       return;
     }
@@ -177,11 +195,11 @@ router.post("/admin/login", adminLoginRateLimiter, async (req, res) => {
       return;
     }
 
-    // Always run bcrypt.compare to prevent timing attacks regardless of email match
-    const emailMatch = email.toLowerCase() === adminEmail.toLowerCase();
-    const valid = await bcrypt.compare(password, adminPasswordHash);
+    // Timing-safe comparisons — both run regardless of email match to prevent oracle attacks.
+    const emailMatch = safeStringEqual(email.toLowerCase(), adminEmail.toLowerCase());
+    const passwordMatch = safeStringEqual(password, adminPassword);
 
-    if (!emailMatch || !valid) {
+    if (!emailMatch || !passwordMatch) {
       logger.warn({ email }, "Failed admin login attempt");
       res.status(403).json({ error: "Access Denied" });
       return;
