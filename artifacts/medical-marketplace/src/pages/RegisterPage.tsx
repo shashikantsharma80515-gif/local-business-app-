@@ -6,7 +6,7 @@ import { Pill, ArrowLeft } from 'lucide-react';
 import type { UserRegistrationRole } from '@workspace/api-client-react';
 
 interface RegisterPageProps {
-  role: 'customer' | 'store_owner' | 'delivery_partner' | 'admin';
+  role: 'customer' | 'store_owner' | 'delivery_partner';
 }
 
 export function RegisterPage({ role }: RegisterPageProps) {
@@ -27,13 +27,11 @@ export function RegisterPage({ role }: RegisterPageProps) {
   const [city, setCity] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('bike');
-  const [adminCode, setAdminCode] = useState('');
 
   const titles = {
     customer: 'Register as Customer',
     store_owner: 'Register your Store',
     delivery_partner: 'Become a Delivery Partner',
-    admin: 'Admin Registration',
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,11 +40,6 @@ export function RegisterPage({ role }: RegisterPageProps) {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
-      return;
-    }
-
-    if (role === 'admin' && adminCode !== 'SECRET_ADMIN_123') {
-      setError('Invalid admin code');
       return;
     }
 
@@ -157,17 +150,6 @@ export function RegisterPage({ role }: RegisterPageProps) {
                 </>
               )}
 
-              {role === 'admin' && (
-                <>
-                  <div className="space-y-1 sm:col-span-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Authorization</h3>
-                  </div>
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Admin Code</label>
-                    <input required type="password" placeholder="SECRET_ADMIN_123" value={adminCode} onChange={e=>setAdminCode(e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
-                  </div>
-                </>
-              )}
             </div>
 
             <button 

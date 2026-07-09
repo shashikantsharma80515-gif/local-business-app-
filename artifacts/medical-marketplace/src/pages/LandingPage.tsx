@@ -2,7 +2,7 @@ import React from "react"
 import { useLocation } from "wouter"
 import { getDashboardRoute } from "@/lib/auth"
 import { useAuth } from "@/hooks/use-auth"
-import { ShieldAlert, Pill, Stethoscope, Store, Truck, ArrowRight } from "lucide-react"
+import { ShieldCheck, Pill, Stethoscope, Store, Truck, ArrowRight } from "lucide-react"
 
 export function LandingPage() {
   const [, setLocation] = useLocation()
@@ -55,7 +55,7 @@ export function LandingPage() {
       <main className="pt-24 pb-16 lg:pt-32">
         <section className="max-w-6xl mx-auto px-6 lg:px-12 text-center py-16 lg:py-24">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm font-medium mb-6">
-            <ShieldAlert className="h-4 w-4" /> Trusted Clinical Platform
+            <ShieldCheck className="h-4 w-4" /> Trusted Clinical Platform
           </div>
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
             Your Health, <br className="hidden lg:block" />
@@ -82,7 +82,7 @@ export function LandingPage() {
 
         <section className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
           <h2 className="text-3xl font-bold text-center mb-12">Who is MediMarket for?</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <RoleCard 
               icon={<Stethoscope className="h-8 w-8" />}
               title="Patients & Customers"
@@ -100,12 +100,6 @@ export function LandingPage() {
               title="Delivery Partners"
               description="Earn by delivering essential medical supplies safely and on time."
               accent="bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
-            />
-            <RoleCard 
-              icon={<ShieldAlert className="h-8 w-8" />}
-              title="Administrators"
-              description="Maintain platform integrity, verify stores, and ensure clinical standards."
-              accent="bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400"
             />
           </div>
         </section>

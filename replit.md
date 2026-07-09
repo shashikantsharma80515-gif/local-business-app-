@@ -12,6 +12,8 @@ A production-ready medical marketplace platform connecting patients with verifie
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string (auto-provisioned by Replit)
 - Required env: `SESSION_SECRET` — used as JWT signing secret
+- Required env: `ADMIN_EMAIL` — admin account email (never stored in DB)
+- Required env: `ADMIN_PASSWORD_HASH` — bcrypt hash of admin password (never stored in DB)
 
 ## Stack
 
@@ -39,7 +41,9 @@ A production-ready medical marketplace platform connecting patients with verifie
 - JWT stored in localStorage (Bearer token), injected into all API calls via `setAuthTokenGetter` in main.tsx
 - Passwords hashed with bcryptjs (12 rounds) — never stored in plaintext
 - SESSION_SECRET (Replit secret) used for JWT signing — never hardcoded
-- Admin accounts cannot be self-registered — must be seeded or bootstrapped securely
+- Admin login is at `/admin/login` — a hidden page not linked from any public UI
+- Admin credentials live entirely in `ADMIN_EMAIL` + `ADMIN_PASSWORD_HASH` env secrets — no DB row, no registration flow
+- Admin accounts cannot be self-registered — the API blocks admin role on both `/auth/register` and `/auth/login`
 - Phone OTP is a demo placeholder (code: 123456) — wire to Twilio/Firebase for production
 - Google OAuth is a visual placeholder — wire to Google OAuth 2.0 credentials for production
 - Role-based access: every protected route checks JWT role claim
