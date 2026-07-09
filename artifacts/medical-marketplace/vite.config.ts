@@ -72,6 +72,15 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    proxy: {
+      // In development, forward /api calls to the API server.
+      // In production the reverse proxy handles this routing.
+      [`${basePath}/api`]: {
+        target: `http://localhost:${process.env.API_PORT ?? 8080}`,
+        rewrite: (path: string) => path.replace(new RegExp(`^${basePath}`), ''),
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port,

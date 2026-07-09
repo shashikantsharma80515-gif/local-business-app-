@@ -7,6 +7,10 @@ import router from "./routes/index.js";
 
 const app = express();
 
+// Trust the first proxy (Replit's reverse proxy sends X-Forwarded-For).
+// Required for express-rate-limit to identify callers correctly.
+app.set("trust proxy", 1);
+
 app.use(
   pinoHttp({
     logger,
