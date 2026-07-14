@@ -139,3 +139,47 @@ router.patch("/:id", requireAuth, async (req, res) => {
 });
 
 export default router;
+// PATCH /api/stores/:id/verify
+router.patch("/:id/verify", requireAuth, requireRole("admin"), async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    const [updated] = await db
+      .update(storesTable)
+      .set({
+        isVerified: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(storesTable.id, id))
+      .returning();
+
+    if (!updated) {
+      return res.status(404).json({ error: "Store not found" });
+    }
+
+    res.json(safeStore(updated));
+  } catch (err) {
+    logger.error({ err }, "Verify store error");
+    res.status(500).json({ error: "Failed to verify store" });
+  }
+});
+
+// DELETE /api/stores/:id
+router.delete("/:id", requireAuth, requireRole("admin"), async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    const result = await db
+      .delete(storesTable)
+      .where(eq(storesTable.id, id));
+
+    res.json({
+      success: true,
+      message: "Store deleted successfully",
+    });
+  } catch (err) {
+    logger.error({ err }, "Delete store error");
+    res.status(500).json({ error: "Failed to delete store" });
+  }
+});
+
